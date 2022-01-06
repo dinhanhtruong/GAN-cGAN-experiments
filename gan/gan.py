@@ -14,10 +14,10 @@ def discriminator(input_shape=(28,28,1)):
         # classifier
         Flatten(), 
         Dropout(0.4),
-        Dense(1, 'sigmoid')
+        Dense(1)
     ])
     return model
-    
+
 
 def generator():
     dense_size = 128 * 7 * 7 #we want 128 channels of size 7x7 => project latent vect
