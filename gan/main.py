@@ -59,6 +59,8 @@ def train_batch(real_imgs): # batch of real imgs
 
 
 # ==================   main training loop   =====================
+G_losses = []
+D_losses = []
 for epoch in range(epochs):
     print("Epoch: ", epoch)
     # iterate over batches
@@ -68,8 +70,18 @@ for epoch in range(epochs):
         if batch_num % 5 == 0:
             print("D loss: ", d_loss)
             print("G loss: ", g_loss)
+        G_losses.append(g_loss)
+        D_losses.append(d_loss)
 
+    # plot losses per epoch
+    pyplot.plot(G_losses, label='generator')
+    pyplot.plot(D_losses, label='discriminator')
+    pyplot.xlabel("batch")
+    pyplot.ylabel("loss")
+    pyplot.legend()
+    pyplot.title("G vs. D losses per epoch")
+    pyplot.show()
 
 # save weights
-generator.save("trained_generator3")
+generator.save("trained_generator6")
 
