@@ -1,33 +1,34 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 import gan
+from matplotlib import pyplot
 
-
-latent_dim = 128
-batch_sz = 128
+latent_dim = 100
+batch_sz = 64
 epochs = 3
 
 generator = gan.generator()
 discriminator = gan.discriminator()
 
 
-loss_func = keras.losses.BinaryCrossentropy(from_logits=True)
-d_optimizer = keras.optimizers.Adam(0.003)
-g_optimizer = keras.optimizers.Adam(0.004)
+loss_func = keras.losses.BinaryCrossentropy()
+d_optimizer = keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5)
+g_optimizer = keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5)
 
 # use ALL images from dataset instead of splitting
 (x_train, _), (x_test, _) = keras.datasets.fashion_mnist.load_data()
 combined_imgs = tf.concat([x_train, x_test], axis=0)
-# normalize and reshape to [batch, h,w, 1] (for conv2D)
-combined_imgs = tf.cast(combined_imgs, tf.float32) / 255.0
+# normalize  to [-1,1] and reshape to [batch, h,w, 1] (for conv2D)
+combined_imgs = (tf.cast(combined_imgs, tf.float32) - 127.5) / 127.5
 combined_imgs = tf.reshape(combined_imgs, [-1, 28,28,1])
-# make TF dataset obj and batch
+# make TF dataset obj, shuffle, and batch
 dataset = tf.data.Dataset.from_tensor_slices(combined_imgs)
-dataset = dataset.batch(batch_sz, drop_remainder=True)
+dataset = dataset.shuffle(buffer_size=1024).batch(batch_sz, drop_remainder=True)
 
 
 
 #  ============  training loop for single batch ===============
+@tf.function
 def train_batch(real_imgs): # batch of real imgs
     # sample random latent vects from N(0,1)
     noise = tf.random.normal([batch_sz, latent_dim])
@@ -68,6 +69,7 @@ for epoch in range(epochs):
             print("D loss: ", d_loss)
             print("G loss: ", g_loss)
 
+
 # save weights
-generator.save("trained_generator")
+generator.save("trained_generator3")
 

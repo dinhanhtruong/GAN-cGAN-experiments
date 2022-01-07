@@ -14,7 +14,7 @@ def discriminator(input_shape=(28,28,1)):
         # classifier
         Flatten(), 
         Dropout(0.4),
-        Dense(1)
+        Dense(1, activation='sigmoid')
     ])
     return model
 
