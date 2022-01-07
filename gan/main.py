@@ -1,6 +1,5 @@
 import tensorflow as tf
 import tensorflow.keras as keras
-from matplotlib import pyplot
 import gan
 
 
@@ -19,7 +18,7 @@ g_optimizer = keras.optimizers.Adam(0.004)
 # use ALL images from dataset instead of splitting
 (x_train, _), (x_test, _) = keras.datasets.fashion_mnist.load_data()
 combined_imgs = tf.concat([x_train, x_test], axis=0)
-# normalize and reshape (for conv2D)
+# normalize and reshape to [batch, h,w, 1] (for conv2D)
 combined_imgs = tf.cast(combined_imgs, tf.float32) / 255.0
 combined_imgs = tf.reshape(combined_imgs, [-1, 28,28,1])
 # make TF dataset obj and batch
@@ -72,10 +71,3 @@ for epoch in range(epochs):
 # save weights
 generator.save("trained_generator")
 
-# ===================      inference       ======================
-# generate new images 
-# for i in range(1,50):
-#     pyplot.subplot(5, 10, i)
-#     pyplot.axis('off')
-#     pyplot.imshow(x_train[i], cmap="gray_r")
-# pyplot.show()
