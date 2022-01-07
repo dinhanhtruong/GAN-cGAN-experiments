@@ -83,22 +83,23 @@ for epoch in range(epochs):
         real_img_batch = img_label_pair[0]
         real_label_batch = img_label_pair[1]
         d_loss, g_loss, fake_imgs = train_batch(real_img_batch, real_label_batch)
-        if batch_num % 5 == 0:
+        if batch_num % 10 == 0:
             print("Batch: ", batch_num)
             print("D loss: ", d_loss)
             print("G loss: ", g_loss)
-        G_losses.append(g_loss)
-        D_losses.append(d_loss)
+            G_losses.append(g_loss)
+            D_losses.append(d_loss)
 
         # plot losses 
-        if batch_num % 20 == 0:
-            pyplot.plot(G_losses, label='generator')
-            pyplot.plot(D_losses, label='discriminator')
-            pyplot.xlabel("batch")
-            pyplot.ylabel("loss")
-            pyplot.legend()
-            pyplot.title("G vs. D losses")
-            pyplot.show()
+        # if batch_num % 20 == 0:
+pyplot.plot(G_losses, label='generator')
+pyplot.plot(D_losses, label='discriminator')
+pyplot.xlabel("batch")
+pyplot.ylabel("loss")
+pyplot.legend()
+pyplot.title("G vs. D losses")
+pyplot.show()
+
 
 # save weights
 generator.save("trained_conditional_generator")
